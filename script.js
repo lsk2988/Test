@@ -149,9 +149,18 @@ var down = false;
 var mode = 'pencil';
 var background = 'white';
 var startX, startY;
-canvas.addEventListener('touchmove', draw);
+
+//long press
+timer = null;
+var longPressDuration = 1500;
+canvas.addEventListener('touchmove', function(e) {
+    clearTimeout(timer);
+    draw(e);
+});
 canvas.addEventListener('touchstart', function(e) {
+    timer = setTimeout(showRangeInput.bind(canvas), longPressDuration);
     if (mode === 'pencil') {
+        console.log(e.touches[0]);
         down = true;
         context.beginPath();
         xPos = e.touches[0].clientX - canvas.offsetLeft;
@@ -175,8 +184,10 @@ canvas.addEventListener('touchstart', function(e) {
 
 });
 canvas.addEventListener('touchend', function() {
+    clearTimeout(timer);
     down = false;
 });
+
 function draw(e){
     console.log('mode: ' + mode)
     if (mode === 'eraser') {
@@ -269,4 +280,9 @@ function sideBarTouchEnd(event) {
 function changeMode(curMode) {
     console.log('click me haha');
     mode = curMode;
+}
+
+function showRangeInput() {
+    clearTimeout();
+    console.log('long press');
 }
