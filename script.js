@@ -153,7 +153,7 @@ var pencilSize = 5;
 var isShowBrushSlider = false;
 //long press
 timer = null;
-var longPressDuration = 1500;
+var longPressDuration = 3000;
 canvas.addEventListener('touchmove', function(e) {
     clearTimeout(timer);
     draw(e);
