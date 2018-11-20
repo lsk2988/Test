@@ -167,8 +167,8 @@ canvas.addEventListener('touchstart', function(e) {
         canvas.addEventListener("touchmove", draw);
     } else if (mode === 'crop') {
         down = true;
-        startX = e.touches[0].clientX - canvas.offsetLeft;
-        startY =e.touches[0].clientY - canvas.offsetTop;
+        startX = e.touches[0].pageX - canvas.offsetLeft;
+        startY =e.touches[0].pageY - canvas.offsetTop;
         context.moveTo(startX, startY);
         canvas.addEventListener("touchmove", draw);
     }
@@ -254,11 +254,11 @@ document.getElementById('file').addEventListener('change', function(e) {
     });
 });
 function sideBarTouchStart(event) {
-    sidebarStartX = event.touches[0].clientX;
+    sidebarStartX = event.touches[0].pageX;
 }
 function sideBarTouchEnd(event) {
-    console.log(event.changedTouches[0].clientX);
-    var changes = event.changedTouches[0].clientX;
+    console.log(event.changedTouches[0].pageX);
+    var changes = event.changedTouches[0].pageX;
     if (changes < 0) {
         console.log('hi');
         sidebar.style.left = '-300px';
@@ -267,5 +267,6 @@ function sideBarTouchEnd(event) {
     }
 }
 function changeMode(curMode) {
+    console.log('click me haha');
     mode = curMode;
 }
