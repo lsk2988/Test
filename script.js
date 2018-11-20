@@ -158,9 +158,9 @@ canvas.addEventListener('touchmove', function(e) {
     draw(e);
 });
 canvas.addEventListener('touchstart', function(e) {
-    timer = setTimeout(showRangeInput.bind(canvas), longPressDuration);
+    timer = setTimeout(showRangeInput(e), longPressDuration);
     if (mode === 'pencil') {
-        console.log(e.touches[0]);
+        //console.log(e.touches[0]);
         down = true;
         context.beginPath();
         xPos = e.touches[0].clientX - canvas.offsetLeft;
@@ -282,7 +282,8 @@ function changeMode(curMode) {
     mode = curMode;
 }
 
-function showRangeInput() {
+function showRangeInput(e) {
     clearTimeout();
     console.log('long press');
+    console.log(e.touches[0]);
 }
