@@ -149,7 +149,8 @@ var down = false;
 var mode = 'pencil';
 var background = 'white';
 var startX, startY;
-
+var pencilSize = 5;
+var isShowBrushSlider = false;
 //long press
 timer = null;
 var longPressDuration = 1500;
@@ -158,7 +159,15 @@ canvas.addEventListener('touchmove', function(e) {
     draw(e);
 });
 canvas.addEventListener('touchstart', function(e) {
-    timer = setTimeout(showRangeInput(e), longPressDuration);
+    if (isShowBrushSlider == true) {
+        var sliderContainer = document.getElementById('penSizeSliderContainer');
+        sliderContainer.style.visibility = 'hidden';
+        var slider = document.getElementById("penSizeSlider");
+        changeBrushSize(slider.value);
+        isShowBrushSlider = false;
+    } else {
+        timer = setTimeout(showRangeInput(e), longPressDuration);
+    }
     if (mode === 'pencil') {
         //console.log(e.touches[0]);
         down = true;
@@ -286,4 +295,16 @@ function showRangeInput(e) {
     clearTimeout();
     console.log('long press');
     console.log(e.touches[0]);
+    isShowBrushSlider = true;
+    var sliderContainer = document.getElementById('penSizeSliderContainer');
+    var slider = document.getElementById("penSizeSlider");
+    var output = document.getElementById("demo");
+    sliderContainer.style.left = e.touches[0].clientX - canvas.offsetLeft + 'px';
+    //console.log(e.touches[0].pageX + 'px');
+    sliderContainer.style.top = e.touches[0].clientY - canvas.offsetTop + 'px';
+    sliderContainer.style.visibility = 'visible';
+    output.innerHTML = slider.value;
+    slider.oninput = function() {
+        output.innerHTML = this.value;
+    }
 }
