@@ -13,6 +13,13 @@ var isShowBrushSlider = false;
 //long press
 var curX, curY;
 timer = null;
+
+//crop
+var cropStartX = [];
+var cropStartY = [];
+var cropEndX = [];
+var cropEndY = [];
+
 canvas.addEventListener('touchmove', function(e) {
     clearTimeout(timer);
     draw(e);
@@ -47,6 +54,7 @@ canvas.addEventListener('touchstart', function(e) {
         context.moveTo(xPos, yPos);
         canvas.addEventListener("touchmove", draw);
     } else if (mode === 'crop') {
+        context.lineWidth = 5;
         down = true;
         startX = e.touches[0].pageX - canvas.offsetLeft;
         startY =e.touches[0].pageY - canvas.offsetTop;
@@ -58,6 +66,13 @@ canvas.addEventListener('touchstart', function(e) {
 canvas.addEventListener('touchend', function() {
     clearTimeout(timer);
     down = false;
+    if (mode === 'crop') {
+        var oldStartX = cropStartX.pop();
+        var oldStartY = cropStartY.pop();
+        var oldEndX = cropEndX.pop();
+        var oldEndY = cropEndY.pop();
+        context.clearRect(oldStartX - context.lineWidth , oldStartY - context.lineWidth, oldEndX + (2 * context.lineWidth) - oldStartX, oldEndY + (2 * context.lineWidth) - oldStartY);
+    }
 });
 
 function draw(e){
@@ -83,11 +98,27 @@ function draw(e){
         yPos =e.touches[0].clientY - canvas.offsetTop;
          if (down == true) {
              console.log('hi');
-             context.clearRect(0, 0, canvas.width, canvas.height);
-             var width = xPos - startX;
-             var height = yPos - startY;
-             context.strokeRect(startX, startY, width, height);
+             if (cropStartY.length != 0) {
+                 var oldStartX = cropStartX.pop();
+                 var oldStartY = cropStartY.pop();
+                 var oldEndX = cropEndX.pop();
+                 var oldEndY = cropEndY.pop();
+                 context.clearRect(oldStartX - context.lineWidth , oldStartY - context.lineWidth, oldEndX + (2 * context.lineWidth) - oldStartX, oldEndY + (2 * context.lineWidth) - oldStartY);
+                 var width = xPos - startX;
+                 var height = yPos - startY;
+                 context.strokeRect(startX, startY, width, height);
+             } else {
+                 context.clearRect(startX - context.lineWidth, startY - context.lineWidth, xPos + (2 * context.lineWidth) - startX, yPos + (2 * context.lineWidth) - startY);
+                 var width = xPos - startX;
+                 var height = yPos - startY;
+                 context.strokeRect(startX, startY, width, height);
+             }
+
          }
+        cropStartX.push(startX);
+        cropStartY.push(startY);
+        cropEndX.push(xPos);
+        cropEndY.push(yPos);
     }
 
 }
